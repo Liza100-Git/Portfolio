@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liza Rani Dash · Data Analyst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS — LIGHT FIRST, DARK PERFECT
+═══════════════════════════════════════════ */
+:root { --ease: cubic-bezier(0.16,1,0.3,1); --fd:'Playfair Display',serif; --fb:'Outfit',sans-serif; --fm:'JetBrains Mono',monospace; }
+
+/* LIGHT — Soft white canvas, deep violet accent, coral pop */
+[data-theme="light"] {
+  --bg:         #FAFBFF;
+  --bg2:        #F2F4FF;
+  --bg3:        #E8ECFF;
+  --bg4:        #DDE2FF;
+  --card:       #FFFFFF;
+  --card2:      #F7F8FF;
+  --border:     rgba(100,80,220,0.1);
+  --border2:    rgba(100,80,220,0.2);
+  --text:       #1A1530;
+  --text2:      #5A5280;
+  --text3:      #A09AB8;
+  --violet:     #6B48FF;
+  --violet2:    #9B7BFF;
+  --coral:      #FF6B6B;
+  --teal:       #00C9B1;
+  --gold:       #F0A500;
+  --violet-bg:  rgba(107,72,255,0.07);
+  --coral-bg:   rgba(255,107,107,0.07);
+  --teal-bg:    rgba(0,201,177,0.07);
+  --glow:       rgba(107,72,255,0.2);
+  --glow2:      rgba(255,107,107,0.15);
+  --shadow:     0 20px 60px rgba(107,72,255,0.1),0 4px 16px rgba(0,0,0,0.06);
+  --shadow2:    0 4px 20px rgba(107,72,255,0.08);
+  --nav-bg:     rgba(250,251,255,0.96);
+  --surface:    rgba(107,72,255,0.04);
+  --tag-bg:     rgba(107,72,255,0.06);
+  --tag-color:  #5A5280;
+}
+
+/* DARK — Deep midnight, electric violet, coral */
+[data-theme="dark"] {
+  --bg:         #0D0B1A;
+  --bg2:        #120F22;
+  --bg3:        #181430;
+  --bg4:        #1E1A3C;
+  --card:       #141025;
+  --card2:      #1A1530;
+  --border:     rgba(155,123,255,0.12);
+  --border2:    rgba(155,123,255,0.22);
+  --text:       #EDE8FF;
+  --text2:      #9088C0;
+  --text3:      #504870;
+  --violet:     #9B7BFF;
+  --violet2:    #C4AAFF;
+  --coral:      #FF8585;
+  --teal:       #00E5C9;
+  --gold:       #FFB830;
+  --violet-bg:  rgba(155,123,255,0.08);
+  --coral-bg:   rgba(255,133,133,0.07);
+  --teal-bg:    rgba(0,229,201,0.07);
+  --glow:       rgba(155,123,255,0.25);
+  --glow2:      rgba(255,133,133,0.18);
+  --shadow:     0 20px 60px rgba(0,0,0,0.5);
+  --shadow2:    0 4px 20px rgba(0,0,0,0.4);
+  --nav-bg:     rgba(13,11,26,0.96);
+  --surface:    rgba(155,123,255,0.05);
+  --tag-bg:     rgba(155,123,255,0.08);
+  --tag-color:  #9088C0;
+}
+
+/* ═══════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);overflow-x:hidden;cursor:none;transition:background 0.5s var(--ease),color 0.5s var(--ease);}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--violet);border-radius:2px;}
+::selection{background:var(--violet);color:#fff;}
+
+/* ═══════════════════════════════════════════
+   CURSOR
+═══════════════════════════════════════════ */
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--violet);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);}
+#cur-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(107,72,255,0.35);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all 0.07s ease;}
+[data-theme="dark"] #cur-ring{border-color:rgba(155,123,255,0.35);}
+#trail{position:fixed;inset:0;pointer-events:none;z-index:99997;}
+
+/* ═══════════════════════════════════════════
+   LOADER — SPECTACULAR
+═══════════════════════════════════════════ */
+#loader{position:fixed;inset:0;z-index:999999;background:#FAFBFF;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
+#lcanvas{position:absolute;inset:0;width:100%;height:100%;}
+.loader-content{position:relative;z-index:10;text-align:center;}
+.loader-name{
+  font-family:var(--fd);font-size:clamp(40px,8vw,90px);font-weight:900;
+  letter-spacing:-0.02em;line-height:0.9;margin-bottom:8px;
+  background:linear-gradient(135deg,#6B48FF 0%,#FF6B6B 50%,#00C9B1 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-size:200% 200%;animation:nameShift 3s ease-in-out infinite alternate;
+}
+@keyframes nameShift{from{background-position:0% 0%}to{background-position:100% 100%}}
+.loader-role{font-family:var(--fm);font-size:11px;letter-spacing:0.3em;color:rgba(107,72,255,0.5);text-transform:uppercase;margin-bottom:36px;}
+.loader-progress{width:220px;margin:0 auto;}
+.loader-track{height:2px;background:rgba(107,72,255,0.12);border-radius:2px;overflow:hidden;margin-bottom:10px;}
+.loader-fill{height:100%;width:0%;background:linear-gradient(90deg,#6B48FF,#FF6B6B,#00C9B1);background-size:200% 100%;animation:barShift 2s linear infinite;transition:width 0.12s linear;}
+@keyframes barShift{0%{background-position:0%}100%{background-position:200%}}
+.loader-pct{font-family:var(--fm);font-size:10px;letter-spacing:0.25em;color:rgba(107,72,255,0.4);}
+.loader-skip{position:absolute;bottom:24px;right:24px;font-family:var(--fm);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(107,72,255,0.3);cursor:pointer;padding:6px 12px;pointer-events:all;transition:color 0.3s;}
+.loader-skip:hover{color:rgba(107,72,255,0.7);}
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:18px 64px;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s var(--ease);}
+nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(24px);border-bottom:0.5px solid var(--border);box-shadow:var(--shadow2);padding:13px 64px;}
+.nav-logo{font-family:var(--fd);font-size:20px;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:0.01em;transition:color 0.3s;}
+.nav-logo em{font-style:italic;color:var(--violet);}
+.nav-logo:hover{color:var(--violet);}
+.nav-links{display:flex;align-items:center;gap:32px;list-style:none;}
+.nav-links a{font-family:var(--fm);font-size:10px;color:var(--text2);text-decoration:none;letter-spacing:0.18em;text-transform:uppercase;transition:color 0.3s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:0.5px;background:var(--violet);transform:scaleX(0);transform-origin:left;transition:transform 0.3s;}
+.nav-links a:hover{color:var(--violet);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+
+/* Theme toggle — pill style */
+.theme-pill{display:flex;align-items:center;gap:0;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:3px;cursor:pointer;transition:all 0.3s;position:relative;}
+.theme-pill-option{display:flex;align-items:center;justify-content:center;width:30px;height:24px;border-radius:16px;transition:all 0.3s;z-index:1;}
+.theme-pill-option svg{width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:1.5;transition:stroke 0.3s;}
+.theme-pill-thumb{position:absolute;width:30px;height:24px;border-radius:16px;background:var(--violet);box-shadow:0 2px 8px var(--glow);transition:all 0.4s var(--ease);}
+[data-theme="light"] .theme-pill-thumb{left:3px;}
+[data-theme="dark"] .theme-pill-thumb{left:33px;}
+[data-theme="light"] .theme-pill-option:first-child svg,[data-theme="dark"] .theme-pill-option:last-child svg{stroke:#fff;}
+
+.nav-cta{font-family:var(--fm);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;padding:10px 22px;background:var(--violet);color:#fff;text-decoration:none;border-radius:20px;transition:all 0.3s;box-shadow:0 4px 20px var(--glow);}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--glow);}
+
+/* ═══════════════════════════════════════════
+   HERO — SPLIT LAYOUT WITH 3D ORB
+═══════════════════════════════════════════ */
+#home{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:0 64px;position:relative;overflow:hidden;}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;}
+.hero-left{position:relative;z-index:10;padding:120px 0 100px;}
+
+.hero-available{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:var(--teal-bg);border:0.5px solid rgba(0,201,177,0.25);border-radius:20px;margin-bottom:28px;font-family:var(--fm);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--teal);}
+.avail-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);animation:av 2s ease-in-out infinite;}
+@keyframes av{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.6)}}
+
+.hero-h1{font-family:var(--fd);font-size:clamp(48px,6.5vw,88px);font-weight:900;line-height:0.9;letter-spacing:-0.02em;margin-bottom:6px;}
+.hero-h1 .solid{color:var(--text);display:block;}
+.hero-h1 .hollow{display:block;font-style:italic;font-weight:400;font-size:clamp(44px,6vw,82px);color:transparent;-webkit-text-stroke:1.5px var(--violet);opacity:0.8;}
+
+.hero-line{display:flex;align-items:center;gap:12px;margin:22px 0 20px;}
+.hero-line-dot{width:8px;height:8px;border-radius:50%;background:var(--coral);box-shadow:0 0 10px var(--coral);}
+.hero-line-text{font-family:var(--fm);font-size:11px;letter-spacing:0.15em;color:var(--violet);text-transform:uppercase;}
+.hero-line-sep{width:24px;height:0.5px;background:var(--border2);}
+.hero-line-sub{font-family:var(--fm);font-size:10px;letter-spacing:0.1em;color:var(--text2);}
+
+.hero-bio{font-size:15px;color:var(--text2);line-height:1.85;max-width:480px;margin-bottom:36px;font-weight:300;}
+
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
+.btn-v{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--violet);color:#fff;font-family:var(--fm);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;border-radius:20px;font-weight:500;transition:all 0.3s;box-shadow:0 4px 20px var(--glow);}
+.btn-v:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--glow);}
+.btn-o{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:1.5px solid var(--border2);color:var(--text2);font-family:var(--fm);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;border-radius:20px;transition:all 0.3s;}
+.btn-o:hover{border-color:var(--violet);color:var(--violet);background:var(--violet-bg);}
+
+.hero-socs{display:flex;gap:10px;}
+.hsoc{width:38px;height:38px;border-radius:12px;border:1px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.3s;box-shadow:var(--shadow2);}
+.hsoc:hover{border-color:var(--violet);background:var(--violet-bg);transform:translateY(-3px);box-shadow:0 8px 20px var(--glow);}
+.hsoc svg{width:15px;height:15px;fill:var(--text2);transition:fill 0.3s;}
+.hsoc:hover svg{fill:var(--violet);}
+
+/* Hero right — 3D canvas orb */
+.hero-right{position:relative;z-index:10;display:flex;align-items:center;justify-content:center;padding:120px 0 100px;}
+#orb3d{width:360px;height:360px;display:block;border-radius:50%;}
+.orb-wrap{position:relative;}
+.orb-ring-a{position:absolute;inset:-20px;border-radius:50%;border:1px solid var(--border2);animation:spinA 18s linear infinite;}
+.orb-ring-a::before{content:'';position:absolute;top:-4px;left:50%;width:8px;height:8px;background:var(--violet);border-radius:50%;transform:translateX(-50%);box-shadow:0 0 12px var(--violet);}
+.orb-ring-b{position:absolute;inset:-44px;border-radius:50%;border:0.5px dashed var(--border);animation:spinA 35s linear infinite reverse;}
+.orb-ring-b::before{content:'';position:absolute;bottom:0;left:50%;width:6px;height:6px;background:var(--coral);border-radius:50%;transform:translateX(-50%);box-shadow:0 0 10px var(--coral);}
+@keyframes spinA{to{transform:rotate(360deg)}}
+
+/* Floating stat pills around orb */
+.orb-stat{position:absolute;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 16px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow2);animation:floatStat 4s ease-in-out infinite;}
+.orb-stat:nth-child(1){top:-10px;right:-60px;animation-delay:0s;}
+.orb-stat:nth-child(2){bottom:20px;left:-70px;animation-delay:1.5s;}
+.orb-stat:nth-child(3){bottom:-10px;right:-40px;animation-delay:3s;}
+@keyframes floatStat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.orb-stat-icon{font-size:16px;}
+.orb-stat-text{font-family:var(--fm);font-size:10px;color:var(--text2);letter-spacing:0.08em;}
+.orb-stat-text strong{display:block;font-size:12px;color:var(--violet);font-weight:600;}
+
+/* Hero bottom stats */
+.hero-stats{position:absolute;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(4,1fr);border-top:0.5px solid var(--border);z-index:10;}
+.hstat{padding:18px 0;text-align:center;border-right:0.5px solid var(--border);transition:background 0.3s;}
+.hstat:last-child{border-right:none;}
+.hstat:hover{background:var(--surface);}
+.hstat-n{font-family:var(--fd);font-size:30px;font-weight:700;color:var(--violet);line-height:1;}
+.hstat-l{font-family:var(--fm);font-size:9px;color:var(--text2);letter-spacing:0.2em;text-transform:uppercase;margin-top:3px;}
+
+.scroll-cue{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.35;}
+.scroll-cue-line{width:1px;height:30px;background:linear-gradient(to bottom,var(--violet),transparent);animation:sc 2s ease-in-out infinite;}
+@keyframes sc{0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.3)}}
+.scroll-cue-lbl{font-family:var(--fm);font-size:8px;letter-spacing:0.35em;color:var(--text2);text-transform:uppercase;}
+
+/* ═══════════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════════ */
+section{padding:110px 64px;position:relative;}
+.seyebrow{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.snum{font-family:var(--fm);font-size:10px;color:var(--violet);opacity:0.4;letter-spacing:0.2em;}
+.srule{width:36px;height:0.5px;background:var(--border2);}
+.slbl{font-family:var(--fm);font-size:10px;color:var(--text3);letter-spacing:0.22em;text-transform:uppercase;}
+.stitle{font-family:var(--fd);font-size:clamp(36px,5vw,68px);font-weight:700;line-height:1.0;letter-spacing:-0.01em;color:var(--text);margin-bottom:12px;}
+.stitle em{font-style:italic;color:var(--violet);font-weight:400;}
+.ssub{font-size:15px;color:var(--text2);max-width:500px;line-height:1.8;font-weight:300;}
+
+/* ═══════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════ */
+#about{background:var(--bg2);}
+.about-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-top:60px;}
+.about-text p{font-size:15px;color:var(--text2);line-height:1.9;font-weight:300;margin-bottom:16px;}
+.skill-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px;}
+.schip{font-family:var(--fm);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--border2);color:var(--text2);border-radius:20px;background:var(--tag-bg);transition:all 0.3s;}
+.schip:hover{border-color:var(--violet);color:var(--violet);background:var(--violet-bg);transform:translateY(-2px);}
+
+/* 3D Bento cards */
+.bento{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:12px;}
+.bcard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;transition:all 0.4s;position:relative;overflow:hidden;}
+.bcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--violet-bg),transparent);opacity:0;transition:opacity 0.4s;border-radius:16px;}
+.bcard:hover{transform:translateY(-4px) scale(1.01);box-shadow:var(--shadow);border-color:var(--border2);}
+.bcard:hover::before{opacity:1;}
+.bcard-icon{font-size:28px;margin-bottom:12px;}
+.bcard-n{font-family:var(--fd);font-size:42px;font-weight:700;line-height:1;margin-bottom:4px;}
+.bcard-n.v{color:var(--violet);}
+.bcard-n.c{color:var(--coral);}
+.bcard-n.t{color:var(--teal);}
+.bcard-n.g{color:var(--gold);}
+.bcard-lbl{font-family:var(--fm);font-size:9px;color:var(--text2);letter-spacing:0.18em;text-transform:uppercase;}
+
+/* ═══════════════════════════════════════════
+   PROJECTS
+═══════════════════════════════════════════ */
+#projects{background:var(--bg);}
+.proj-hdr{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:56px;}
+.proj-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px 32px;position:relative;overflow:hidden;transition:all 0.4s;transform-style:preserve-3d;cursor:default;}
+.pcard-glow{position:absolute;width:200px;height:200px;border-radius:50%;pointer-events:none;opacity:0;transition:opacity 0.4s;background:radial-gradient(circle,var(--violet-bg) 0%,transparent 70%);}
+.pcard:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--border2);}
+.pcard:hover .pcard-glow{opacity:1;}
+.pcard-shimmer{position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(107,72,255,0.06) 50%,transparent 60%);transform:translateX(-100%);transition:transform 0.7s;border-radius:20px;pointer-events:none;}
+.pcard:hover .pcard-shimmer{transform:translateX(100%);}
+.pcard-num{font-family:var(--fd);font-size:64px;font-weight:700;color:var(--border);line-height:1;position:absolute;top:14px;right:22px;user-select:none;transition:color 0.4s;}
+.pcard:hover .pcard-num{color:var(--border2);}
+.pcard-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--violet);margin-bottom:16px;}
+.pcard-badge::before{content:'';width:14px;height:0.5px;background:var(--violet);}
+.pcard-title{font-family:var(--fd);font-size:22px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.2;}
+.pcard-desc{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:18px;font-weight:300;}
+.pcard-bullets{margin-bottom:20px;}
+.pb{font-size:12px;color:var(--text2);padding-left:14px;position:relative;margin-bottom:5px;font-weight:300;}
+.pb::before{content:'›';position:absolute;left:0;color:var(--violet);}
+.pcard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;}
+.ptag{font-family:var(--fm);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--border2);color:var(--tag-color);border-radius:20px;background:var(--tag-bg);transition:all 0.3s;}
+.pcard:hover .ptag{border-color:rgba(107,72,255,0.3);color:var(--violet);background:var(--violet-bg);}
+.plink{display:inline-flex;align-items:center;gap:7px;font-family:var(--fm);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--violet);text-decoration:none;transition:gap 0.3s;}
+.plink:hover{gap:13px;}
+
+/* ═══════════════════════════════════════════
+   SKILLS
+═══════════════════════════════════════════ */
+#skills{background:var(--bg2);}
+.skills-wrap{display:grid;grid-template-columns:260px 1fr;gap:80px;align-items:start;margin-top:60px;}
+.skills-sticky{position:sticky;top:100px;}
+.sgroups{display:flex;flex-direction:column;gap:0;}
+.sgroup{padding:26px 0;border-top:0.5px solid var(--border);}
+.sgroup:last-child{border-bottom:0.5px solid var(--border);}
+.sgroup-name{font-family:var(--fm);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--violet);opacity:0.5;margin-bottom:16px;}
+.spills{display:flex;flex-wrap:wrap;gap:7px;}
+.spill{font-family:var(--fm);font-size:10px;letter-spacing:0.08em;padding:7px 14px;border:1px solid var(--border2);color:var(--text2);border-radius:20px;background:var(--tag-bg);transition:all 0.3s;position:relative;overflow:hidden;}
+.spill::after{content:'';position:absolute;inset:0;background:var(--violet);transform:scaleX(0);transform-origin:left;transition:transform 0.3s;z-index:0;opacity:0.07;border-radius:20px;}
+.spill:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-2px);box-shadow:0 4px 12px var(--glow);}
+.spill:hover::after{transform:scaleX(1);}
+.spill span{position:relative;z-index:1;}
+
+/* Bars */
+.sbars{margin-top:36px;padding-top:26px;border-top:0.5px solid var(--border);}
+.sbar-r{margin-bottom:18px;}
+.sbar-info{display:flex;justify-content:space-between;margin-bottom:7px;}
+.sbar-name{font-family:var(--fm);font-size:11px;color:var(--text);letter-spacing:0.06em;}
+.sbar-pct{font-family:var(--fm);font-size:10px;color:var(--violet);}
+.sbar-track{height:4px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+.sbar-fill{height:100%;width:0;border-radius:4px;transition:width 1.6s var(--ease);}
+.sv{background:linear-gradient(90deg,var(--violet2),var(--violet));box-shadow:0 0 8px var(--glow);}
+.sc{background:linear-gradient(90deg,#FF9898,var(--coral));box-shadow:0 0 8px var(--glow2);}
+.st{background:linear-gradient(90deg,#00E5B0,var(--teal));box-shadow:0 0 8px rgba(0,201,177,0.3);}
+
+/* ═══════════════════════════════════════════
+   EDUCATION
+═══════════════════════════════════════════ */
+#education{background:var(--bg);}
+.edu-layout{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:60px;}
+.edu-timeline{display:flex;flex-direction:column;gap:0;}
+.edu-item{display:flex;gap:20px;padding:20px 0;border-bottom:0.5px solid var(--border);position:relative;}
+.edu-item:first-child{border-top:0.5px solid var(--border);}
+.edu-year-col{flex-shrink:0;width:80px;}
+.edu-yr{font-family:var(--fm);font-size:10px;color:var(--violet);letter-spacing:0.1em;font-weight:500;}
+.edu-dot{width:10px;height:10px;border-radius:50%;background:var(--violet);margin-top:8px;box-shadow:0 0 8px var(--glow);flex-shrink:0;}
+.edu-body{}
+.edu-deg{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.3;}
+.edu-uni{font-size:13px;color:var(--text2);font-weight:300;margin-bottom:2px;}
+.edu-pct{font-family:var(--fm);font-size:10px;color:var(--teal);letter-spacing:0.1em;}
+
+/* Certifications / skills right */
+.skills-right{display:flex;flex-direction:column;gap:14px;}
+.sright-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;display:flex;align-items:center;gap:16px;transition:all 0.3s;}
+.sright-card:hover{border-color:var(--violet);background:var(--card2);transform:translateX(4px);box-shadow:var(--shadow2);}
+.src-icon{width:44px;height:44px;border-radius:12px;background:var(--violet-bg);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.src-title{font-family:var(--fb);font-size:14px;color:var(--text);font-weight:500;margin-bottom:3px;}
+.src-sub{font-family:var(--fm);font-size:10px;color:var(--text2);letter-spacing:0.08em;}
+
+/* ═══════════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════════ */
+#contact{background:var(--bg2);padding-bottom:120px;}
+.contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:60px;}
+.contact-quote{font-family:var(--fd);font-size:20px;font-weight:400;font-style:italic;color:var(--text2);line-height:1.7;margin-bottom:40px;position:relative;padding-left:20px;}
+.contact-quote::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:linear-gradient(to bottom,var(--violet),var(--coral));border-radius:2px;}
+.clinks{display:flex;flex-direction:column;gap:0;}
+.clink{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:0.5px solid var(--border);text-decoration:none;transition:gap 0.3s;}
+.clink:first-child{border-top:0.5px solid var(--border);}
+.clink:hover{gap:24px;}
+.clink-ico{width:38px;height:38px;border:1px solid var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;background:var(--card);}
+.clink-ico svg{width:14px;height:14px;stroke:var(--text2);fill:none;stroke-width:1.5;transition:stroke 0.3s;}
+.clink:hover .clink-ico{border-color:var(--violet);background:var(--violet-bg);box-shadow:0 4px 12px var(--glow);}
+.clink:hover .clink-ico svg{stroke:var(--violet);}
+.clink-txt{font-family:var(--fm);font-size:12px;color:var(--text2);letter-spacing:0.04em;transition:color 0.3s;}
+.clink:hover .clink-txt{color:var(--text);}
+
+/* Form */
+.cform{display:flex;flex-direction:column;gap:1px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.ffield{background:var(--card);border:1.5px solid var(--border);border-radius:12px;display:flex;flex-direction:column;transition:all 0.3s;margin-bottom:12px;}
+.ffield:focus-within{border-color:var(--violet);box-shadow:0 0 0 4px rgba(107,72,255,0.08);}
+.flbl{font-family:var(--fm);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(107,72,255,0.5);padding:12px 16px 0;}
+.finp,.fta{background:transparent;border:none;outline:none;font-family:var(--fb);font-size:14px;color:var(--text);padding:5px 16px 12px;resize:none;width:100%;font-weight:300;}
+.finp::placeholder,.fta::placeholder{color:var(--text3);}
+.fta{min-height:100px;}
+.fbtn{margin-top:4px;width:100%;padding:14px;background:var(--violet);color:#fff;border:none;cursor:pointer;font-family:var(--fm);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;font-weight:500;border-radius:12px;transition:all 0.3s;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px var(--glow);}
+.fbtn:hover{opacity:0.88;transform:translateY(-1px);box-shadow:0 8px 28px var(--glow);}
+.fbtn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5;}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer{background:var(--bg);border-top:0.5px solid var(--border);padding:24px 64px;display:flex;align-items:center;justify-content:space-between;}
+.foot-l{font-family:var(--fm);font-size:10px;color:var(--text3);letter-spacing:0.12em;}
+.foot-l span{color:var(--violet);opacity:0.7;}
+.foot-r{font-family:var(--fm);font-size:10px;color:var(--text3);letter-spacing:0.12em;}
+
+/* ═══════════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════════ */
+.rv{opacity:0;transform:translateY(28px);transition:opacity 0.9s var(--ease),transform 0.9s var(--ease);}
+.rvl{opacity:0;transform:translateX(-28px);transition:opacity 0.9s var(--ease),transform 0.9s var(--ease);}
+.rvr{opacity:0;transform:translateX(28px);transition:opacity 0.9s var(--ease),transform 0.9s var(--ease);}
+.rv.in,.rvl.in,.rvr.in{opacity:1;transform:translate(0);}
+
+/* ═══════════════════════════════════════════
+   MOBILE
+═══════════════════════════════════════════ */
+@media(max-width:960px){
+  nav{padding:16px 24px;}
+  nav.scrolled{padding:12px 24px;}
+  section{padding:80px 24px;}
+  #home{grid-template-columns:1fr;padding:0 24px;}
+  .hero-left{padding:120px 0 40px;}
+  .hero-right{display:none;}
+  .hero-stats{grid-template-columns:1fr 1fr;}
+  .about-layout,.proj-hdr,.proj-cards,.skills-wrap,.edu-layout,.contact-layout{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:10px;padding:20px 24px;text-align:center;}
+  .frow{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <canvas id="lcanvas"></canvas>
+  <div class="loader-content">
+    <div class="loader-name">Liza Rani<br>Dash</div>
+    <div class="loader-role">Data Analyst · Power BI · SQL · Excel</div>
+    <div class="loader-progress">
+      <div class="loader-track"><div class="loader-fill" id="lfill"></div></div>
+      <div class="loader-pct" id="lpct">0%</div>
+    </div>
+  </div>
+  <div class="loader-skip" onclick="skipLoad()">Skip ›</div>
+</div>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<canvas id="trail"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#home" class="nav-logo">Liza <em>Dash</em></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <!-- Beautiful pill theme toggle -->
+    <div class="theme-pill" onclick="toggleTheme()" title="Toggle theme">
+      <div class="theme-pill-thumb"></div>
+      <div class="theme-pill-option">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+      <div class="theme-pill-option">
+        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </div>
+    </div>
+    <a href="mailto:lizaranidash100@gmail.com" class="nav-cta">Hire Me</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <canvas id="hero-canvas"></canvas>
+
+  <div class="hero-left">
+    <div class="hero-available"><div class="avail-dot"></div>Open to opportunities · 2024</div>
+    <h1 class="hero-h1">
+      <span class="solid">LIZA RANI</span>
+      <span class="hollow">Dash</span>
+    </h1>
+    <div class="hero-line">
+      <div class="hero-line-dot"></div>
+      <span class="hero-line-text">Data Analyst</span>
+      <div class="hero-line-sep"></div>
+      <span class="hero-line-sub">Power BI · SQL · Excel</span>
+    </div>
+    <p class="hero-bio">MBA graduate with strong analytical skills and hands-on experience in Advanced Excel, SQL, and Power BI. Passionate about turning raw data into actionable business and scientific insights that drive smart decisions.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-v">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        View Projects
+      </a>
+      <a href="#contact" class="btn-o">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Get in Touch
+      </a>
+    </div>
+    <div class="hero-socs">
+      <a href="mailto:lizaranidash100@gmail.com" class="hsoc">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </a>
+      <a href="tel:+917849016407" class="hsoc">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.86a16 16 0 0 0 6 6l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- 3D Animated Orb -->
+  <div class="hero-right">
+    <div class="orb-wrap">
+      <div class="orb-ring-b"></div>
+      <div class="orb-ring-a"></div>
+      <canvas id="orb3d" width="360" height="360"></canvas>
+      <!-- Floating stat pills -->
+      <div class="orb-stat" style="top:-10px;right:-80px">
+        <div class="orb-stat-icon">📊</div>
+        <div class="orb-stat-text"><strong>Power BI</strong>Dashboards</div>
+      </div>
+      <div class="orb-stat" style="bottom:30px;left:-90px">
+        <div class="orb-stat-icon">🗃️</div>
+        <div class="orb-stat-text"><strong>SQL</strong>MySQL</div>
+      </div>
+      <div class="orb-stat" style="bottom:-5px;right:-60px">
+        <div class="orb-stat-icon">📈</div>
+        <div class="orb-stat-text"><strong>Excel</strong>Advanced</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n">2</div><div class="hstat-l">Projects</div></div>
+    <div class="hstat"><div class="hstat-n">73%</div><div class="hstat-l">MBA Score</div></div>
+    <div class="hstat"><div class="hstat-n">3+</div><div class="hstat-l">Tools</div></div>
+    <div class="hstat"><div class="hstat-n">2024</div><div class="hstat-l">Graduate</div></div>
+  </div>
+  <div class="scroll-cue"><div class="scroll-cue-line"></div><span class="scroll-cue-lbl">Scroll</span></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="seyebrow rv"><span class="snum">00</span><div class="srule"></div><span class="slbl">About Me</span></div>
+  <h2 class="stitle rv">Who I <em>Am</em></h2>
+  <div class="about-layout">
+    <div class="rvl">
+      <div class="about-text">
+        <p>I'm an MBA graduate (Banking & Finance) from IIBM, Meerut with a strong foundation in data analytics. My academic journey started with a Bachelor's in Science (Botany Hons.) from Khallikote University, giving me a unique cross-disciplinary perspective.</p>
+        <p>I specialise in making data speak clearly — whether through clean Excel dashboards, insightful SQL queries, or powerful Power BI reports. I bring curiosity, precision, and business acumen to every dataset.</p>
+        <p>Currently based in Dharwad, Karnataka — actively seeking entry-level analytics roles where I can deliver real, data-driven business value.</p>
+      </div>
+      <div class="skill-chips">
+        <span class="schip">Power BI</span><span class="schip">Advanced Excel</span><span class="schip">SQL / MySQL</span><span class="schip">DAX</span><span class="schip">Pivot Tables</span><span class="schip">VLOOKUP</span><span class="schip">Data Cleaning</span><span class="schip">Financial Analysis</span><span class="schip">Dashboard Design</span>
+      </div>
+    </div>
+    <div class="bento rvr">
+      <div class="bcard"><div class="bcard-icon">🎓</div><div class="bcard-n v">MBA</div><div class="bcard-lbl">Banking & Finance</div></div>
+      <div class="bcard"><div class="bcard-icon">📊</div><div class="bcard-n c">2</div><div class="bcard-lbl">Projects Built</div></div>
+      <div class="bcard"><div class="bcard-icon">✨</div><div class="bcard-n t">73%</div><div class="bcard-lbl">MBA Score</div></div>
+      <div class="bcard"><div class="bcard-icon">🚀</div><div class="bcard-n g">3+</div><div class="bcard-lbl">Tools Mastered</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="proj-hdr">
+    <div class="rv">
+      <div class="seyebrow"><span class="snum">01</span><div class="srule"></div><span class="slbl">My Work</span></div>
+      <h2 class="stitle">Featured <em>Projects</em></h2>
+    </div>
+    <p class="ssub rv">Real business problems tackled with Excel dashboards and Power BI analytics — clean, insightful, and decision-ready.</p>
+  </div>
+  <div class="proj-cards rv">
+
+    <div class="pcard">
+      <div class="pcard-glow" style="top:-50px;left:-50px;"></div>
+      <div class="pcard-shimmer"></div>
+      <div class="pcard-num">01</div>
+      <div class="pcard-badge">Excel · Analytics</div>
+      <h3 class="pcard-title">Business Performance Analysis</h3>
+      <p class="pcard-desc">Cleaned and analysed business datasets using advanced Excel functions to uncover key performance metrics and support data-driven decision-making.</p>
+      <div class="pcard-bullets">
+        <div class="pb">Data cleaning using IF, SUMIFS, COUNTIFS, VLOOKUP/XLOOKUP</div>
+        <div class="pb">Trend analysis via Pivot Tables and dynamic charts</div>
+        <div class="pb">Business dashboard with key metrics and actionable insights</div>
+      </div>
+      <div class="pcard-tags"><span class="ptag">Excel</span><span class="ptag">Pivot Tables</span><span class="ptag">VLOOKUP</span><span class="ptag">XLOOKUP</span><span class="ptag">Dashboard</span></div>
+      <a href="https://github.com/lizaranidash100/Business_Analysis_Dashboard" target="_blank" class="plink">View on GitHub <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+    </div>
+
+    <div class="pcard">
+      <div class="pcard-glow" style="top:-50px;right:-50px;background:radial-gradient(circle,var(--coral-bg) 0%,transparent 70%)"></div>
+      <div class="pcard-shimmer"></div>
+      <div class="pcard-num">02</div>
+      <div class="pcard-badge">Power BI · Finance</div>
+      <h3 class="pcard-title">Loan Approval & Risk Analysis Dashboard</h3>
+      <p class="pcard-desc">Designed an interactive Power BI dashboard to evaluate loan approvals and risk patterns using applicant income, credit scores, assets, and demographics.</p>
+      <div class="pcard-bullets">
+        <div class="pb">Data cleaning & transformation in Power Query</div>
+        <div class="pb">DAX-driven KPIs for credit risk assessment</div>
+        <div class="pb">Interactive visuals: income vs approval rate, risk segments</div>
+        <div class="pb">Demographic analysis supporting lending decisions</div>
+      </div>
+      <div class="pcard-tags"><span class="ptag">Power BI</span><span class="ptag">DAX</span><span class="ptag">Power Query</span><span class="ptag">Finance</span><span class="ptag">Risk Analysis</span></div>
+      <a href="https://github.com/lizaranidash100/Loan-Approval-and-Risk-analysis" target="_blank" class="plink">View on GitHub <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="seyebrow rv"><span class="snum">02</span><div class="srule"></div><span class="slbl">Expertise</span></div>
+  <h2 class="stitle rv">Skills & <em>Technologies</em></h2>
+  <div class="skills-wrap">
+    <div class="skills-sticky rvl">
+      <p class="ssub">A sharp analytics toolkit built for real business problems — from raw data to polished dashboards.</p>
+    </div>
+    <div>
+      <div class="sgroups rv">
+        <div class="sgroup">
+          <div class="sgroup-name">Data Analysis & Excel</div>
+          <div class="spills">
+            <div class="spill"><span>Advanced Excel</span></div>
+            <div class="spill"><span>Pivot Tables</span></div>
+            <div class="spill"><span>VLOOKUP / XLOOKUP</span></div>
+            <div class="spill"><span>SUMIFS / COUNTIFS</span></div>
+            <div class="spill"><span>Data Cleaning</span></div>
+            <div class="spill"><span>Data Validation</span></div>
+          </div>
+        </div>
+        <div class="sgroup">
+          <div class="sgroup-name">BI & Visualisation</div>
+          <div class="spills">
+            <div class="spill"><span>Power BI</span></div>
+            <div class="spill"><span>DAX Basics</span></div>
+            <div class="spill"><span>Power Query</span></div>
+            <div class="spill"><span>Dashboard Design</span></div>
+            <div class="spill"><span>Interactive Reports</span></div>
+          </div>
+        </div>
+        <div class="sgroup">
+          <div class="sgroup-name">Database & SQL</div>
+          <div class="spills">
+            <div class="spill"><span>MySQL</span></div>
+            <div class="spill"><span>SQL Queries</span></div>
+            <div class="spill"><span>Joins & Filtering</span></div>
+            <div class="spill"><span>Aggregation</span></div>
+          </div>
+        </div>
+        <div class="sgroup">
+          <div class="sgroup-name">Finance & Soft Skills</div>
+          <div class="spills">
+            <div class="spill"><span>Financial Analysis</span></div>
+            <div class="spill"><span>Banking Operations</span></div>
+            <div class="spill"><span>Credit Analysis</span></div>
+            <div class="spill"><span>MS Word / PowerPoint</span></div>
+            <div class="spill"><span>Analytical Thinking</span></div>
+            <div class="spill"><span>Communication</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="sbars rv">
+        <div class="sbar-r"><div class="sbar-info"><span class="sbar-name">Advanced Excel</span><span class="sbar-pct">90%</span></div><div class="sbar-track"><div class="sbar-fill sv" data-w="90"></div></div></div>
+        <div class="sbar-r"><div class="sbar-info"><span class="sbar-name">Power BI / DAX</span><span class="sbar-pct">82%</span></div><div class="sbar-track"><div class="sbar-fill sc" data-w="82"></div></div></div>
+        <div class="sbar-r"><div class="sbar-info"><span class="sbar-name">SQL / MySQL</span><span class="sbar-pct">78%</span></div><div class="sbar-track"><div class="sbar-fill st" data-w="78"></div></div></div>
+        <div class="sbar-r"><div class="sbar-info"><span class="sbar-name">Financial Analysis</span><span class="sbar-pct">85%</span></div><div class="sbar-track"><div class="sbar-fill sv" data-w="85"></div></div></div>
+        <div class="sbar-r"><div class="sbar-info"><span class="sbar-name">Data Visualisation</span><span class="sbar-pct">83%</span></div><div class="sbar-track"><div class="sbar-fill sc" data-w="83"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="seyebrow rv"><span class="snum">03</span><div class="srule"></div><span class="slbl">Background</span></div>
+  <h2 class="stitle rv">Education & <em>Background</em></h2>
+  <div class="edu-layout">
+    <div class="edu-timeline rvl">
+      <div class="edu-item">
+        <div class="edu-year-col"><div class="edu-yr">2024</div></div>
+        <div class="edu-dot"></div>
+        <div class="edu-body">
+          <div class="edu-deg">MBA — Banking & Finance Management</div>
+          <div class="edu-uni">IIBM, Meerut</div>
+          <div class="edu-pct">73.06%</div>
+        </div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-year-col"><div class="edu-yr">2021</div></div>
+        <div class="edu-dot" style="background:var(--coral);box-shadow:0 0 8px var(--glow2)"></div>
+        <div class="edu-body">
+          <div class="edu-deg">Bachelor of Science — Botany Hons.</div>
+          <div class="edu-uni">Khallikote University, Odisha</div>
+          <div class="edu-pct" style="color:var(--coral)">75.5%</div>
+        </div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-year-col"><div class="edu-yr">2018</div></div>
+        <div class="edu-dot" style="background:var(--teal);box-shadow:0 0 8px rgba(0,201,177,0.3)"></div>
+        <div class="edu-body">
+          <div class="edu-deg">Intermediate (12th)</div>
+          <div class="edu-uni">CHSE, Odisha</div>
+          <div class="edu-pct" style="color:var(--teal)">69.5%</div>
+        </div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-year-col"><div class="edu-yr">2016</div></div>
+        <div class="edu-dot" style="background:var(--gold);box-shadow:0 0 8px rgba(240,165,0,0.3)"></div>
+        <div class="edu-body">
+          <div class="edu-deg">Matriculation (10th)</div>
+          <div class="edu-uni">BSE, Odisha</div>
+          <div class="edu-pct" style="color:var(--gold)">80.5%</div>
+        </div>
+      </div>
+    </div>
+    <div class="skills-right rvr">
+      <div class="sright-card">
+        <div class="src-icon">📊</div>
+        <div><div class="src-title">Power BI Dashboard Design</div><div class="src-sub">Interactive reports · DAX · Power Query</div></div>
+      </div>
+      <div class="sright-card">
+        <div class="src-icon">📋</div>
+        <div><div class="src-title">Advanced Excel Analytics</div><div class="src-sub">Pivot Tables · VLOOKUP · XLOOKUP · Charts</div></div>
+      </div>
+      <div class="sright-card">
+        <div class="src-icon">🗃️</div>
+        <div><div class="src-title">SQL Database Analysis</div><div class="src-sub">MySQL · Joins · Filtering · Aggregation</div></div>
+      </div>
+      <div class="sright-card">
+        <div class="src-icon">🏦</div>
+        <div><div class="src-title">Finance & Banking Knowledge</div><div class="src-sub">Loans · Credit Analysis · Financial Reporting</div></div>
+      </div>
+      <div class="sright-card">
+        <div class="src-icon">📝</div>
+        <div><div class="src-title">Reporting & Presentation</div><div class="src-sub">MS Word · PowerPoint · Business Reports</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="seyebrow rv"><span class="snum">04</span><div class="srule"></div><span class="slbl">Get in Touch</span></div>
+  <h2 class="stitle rv">Let's <em>Connect</em></h2>
+  <div class="contact-layout">
+    <div class="rvl">
+      <p class="contact-quote">Seeking an entry-level analytics role where I can turn data into decisions and make a real business impact. Open to full-time roles and collaborations — I respond within 24 hours.</p>
+      <div class="clinks">
+        <a href="mailto:lizaranidash100@gmail.com" class="clink">
+          <div class="clink-ico"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+          <span class="clink-txt">lizaranidash100@gmail.com</span>
+        </a>
+        <a href="tel:+917849016407" class="clink">
+          <div class="clink-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.86a16 16 0 0 0 6 6l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg></div>
+          <span class="clink-txt">+91 7849016407</span>
+        </a>
+        <div class="clink">
+          <div class="clink-ico"><svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <span class="clink-txt">Ambedkar Nagar, Dharwad, Karnataka</span>
+        </div>
+      </div>
+    </div>
+    <div class="cform rvr">
+      <div class="frow">
+        <div class="ffield"><label class="flbl">Name</label><input class="finp" type="text" placeholder="Your name"></div>
+        <div class="ffield"><label class="flbl">Email</label><input class="finp" type="email" placeholder="your@email.com"></div>
+      </div>
+      <div class="ffield"><label class="flbl">Subject</label><input class="finp" type="text" placeholder="Job Opportunity / Collaboration / Hi!"></div>
+      <div class="ffield"><label class="flbl">Message</label><textarea class="fta" placeholder="Tell me about the role or project..."></textarea></div>
+      <button class="fbtn" onclick="sendForm(this)">
+        Send Message
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-l">&copy; 2025 <span>Liza Rani Dash</span> · Data Analyst</div>
+  <div class="foot-r">Dharwad, Karnataka · India</div>
+</footer>
+
+<script>
+// ══════════════════════════════════════
+// LOADER
+// ══════════════════════════════════════
+(function(){
+  const lc=document.getElementById('lcanvas');
+  const lctx=lc.getContext('2d');
+  let LW,LH;
+  function rsz(){LW=lc.width=window.innerWidth;LH=lc.height=window.innerHeight;}
+  rsz();window.addEventListener('resize',rsz);
+  let lt=0,pct=0;
+
+  // Floating orbs
+  const orbs=[];
+  for(let i=0;i<12;i++){
+    const hue=[270,0,175][i%3];
+    orbs.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,
+      vx:(Math.random()-0.5)*0.8,vy:(Math.random()-0.5)*0.8,
+      r:30+Math.random()*80,hue,alpha:0.04+Math.random()*0.06,phase:Math.random()*Math.PI*2});
+  }
+
+  function frame(){
+    lctx.fillStyle='rgba(250,251,255,0.92)';lctx.fillRect(0,0,LW,LH);
+    orbs.forEach(o=>{
+      o.x+=o.vx;o.y+=o.vy;
+      if(o.x<-100)o.x=LW+100;if(o.x>LW+100)o.x=-100;
+      if(o.y<-100)o.y=LH+100;if(o.y>LH+100)o.y=-100;
+      const pulse=o.alpha*(0.8+Math.sin(lt*0.02+o.phase)*0.3);
+      const g=lctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
+      g.addColorStop(0,`hsla(${o.hue},80%,65%,${pulse})`);
+      g.addColorStop(1,'transparent');
+      lctx.beginPath();lctx.arc(o.x,o.y,o.r,0,Math.PI*2);lctx.fillStyle=g;lctx.fill();
+    });
+
+    // Soft grid
+    lctx.strokeStyle='rgba(107,72,255,0.04)';lctx.lineWidth=0.5;
+    for(let x=0;x<LW;x+=60){lctx.beginPath();lctx.moveTo(x,0);lctx.lineTo(x,LH);lctx.stroke();}
+    for(let y=0;y<LH;y+=60){lctx.beginPath();lctx.moveTo(0,y);lctx.lineTo(LW,y);lctx.stroke();}
+
+    pct=Math.min(100,lt*0.65);
+    document.getElementById('lfill').style.width=pct+'%';
+    document.getElementById('lpct').textContent=Math.floor(pct)+'%';
+    lt++;
+    if(pct>=100){setTimeout(finishLoad,300);return;}
+    requestAnimationFrame(frame);
+  }
+
+  window.skipLoad=function(){finishLoad();}
+  window.finishLoad=function(){
+    const l=document.getElementById('loader');
+    l.style.transition='opacity 0.8s ease';l.style.opacity='0';
+    setTimeout(()=>{l.style.display='none';bootPortfolio();},820);
+  };
+
+  document.body.style.overflow='hidden';
+  requestAnimationFrame(frame);
+})();
+
+// ══════════════════════════════════════
+// PORTFOLIO BOOT
+// ══════════════════════════════════════
+function bootPortfolio(){
+  document.body.style.overflow='auto';
+
+  // CURSOR
+  const cur=document.getElementById('cur');
+  const ring=document.getElementById('cur-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function ac(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ac);})();
+
+  // TRAIL
+  const tc=document.getElementById('trail');
+  const tx=tc.getContext('2d');
+  tc.width=window.innerWidth;tc.height=window.innerHeight;
+  window.addEventListener('resize',()=>{tc.width=window.innerWidth;tc.height=window.innerHeight;});
+  const tpts=[];
+  document.addEventListener('mousemove',e=>{
+    for(let i=0;i<2;i++) tpts.push({x:e.clientX,y:e.clientY,vx:(Math.random()-0.5)*1.5,vy:(Math.random()-0.5)*1.5-0.8,life:1,size:1.5+Math.random()*2,hue:270});
+  });
+  (function at(){
+    tx.clearRect(0,0,tc.width,tc.height);
+    for(let i=tpts.length-1;i>=0;i--){
+      const p=tpts[i];p.x+=p.vx;p.y+=p.vy;p.life-=0.04;p.vy+=0.04;
+      if(p.life<=0){tpts.splice(i,1);continue;}
+      tx.beginPath();tx.arc(p.x,p.y,p.size*p.life,0,Math.PI*2);
+      const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+      tx.fillStyle=`hsla(${p.hue},80%,${isDark?70:55}%,${p.life*0.4})`;tx.fill();
+    }
+    requestAnimationFrame(at);
+  })();
+
+  // NAV
+  const nav=document.getElementById('nav');
+  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60));
+
+  // HERO CANVAS — floating orbs + particle mesh
+  const hc=document.getElementById('hero-canvas');
+  const hctx=hc.getContext('2d');
+  function hrsz(){hc.width=window.innerWidth;hc.height=window.innerHeight;}
+  hrsz();window.addEventListener('resize',hrsz);
+  let hmx=window.innerWidth/2,hmy=window.innerHeight/2;
+  document.addEventListener('mousemove',e=>{hmx=e.clientX;hmy=e.clientY;});
+
+  // Mesh nodes
+  const nodes=[];
+  for(let i=0;i<50;i++){
+    nodes.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,vx:(Math.random()-0.5)*0.35,vy:(Math.random()-0.5)*0.35,hue:270+Math.random()*60,size:1.5+Math.random()*2,pulse:Math.random()*Math.PI*2});
+  }
+  let ht=0;
+  function animH(){
+    const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+    hctx.fillStyle=isDark?'rgba(13,11,26,0.85)':'rgba(250,251,255,0.85)';
+    hctx.fillRect(0,0,hc.width,hc.height);
+
+    // Mouse glow
+    const mg=hctx.createRadialGradient(hmx,hmy,0,hmx,hmy,350);
+    mg.addColorStop(0,isDark?'rgba(107,72,255,0.06)':'rgba(107,72,255,0.04)');
+    mg.addColorStop(1,'transparent');
+    hctx.beginPath();hctx.arc(hmx,hmy,350,0,Math.PI*2);hctx.fillStyle=mg;hctx.fill();
+
+    // Ambient orbs
+    [[0.15,0.3,270],[0.8,0.6,300],[0.5,0.8,0]].forEach(([nx,ny,nh])=>{
+      const ox=nx*hc.width,oy=ny*hc.height;
+      const g=hctx.createRadialGradient(ox,oy,0,ox,oy,hc.width*0.25);
+      g.addColorStop(0,`hsla(${nh},80%,65%,${isDark?0.04:0.03})`);
+      g.addColorStop(1,'transparent');
+      hctx.beginPath();hctx.arc(ox,oy,hc.width*0.25,0,Math.PI*2);hctx.fillStyle=g;hctx.fill();
+    });
+
+    // Mesh
+    nodes.forEach(n=>{
+      n.x+=n.vx+(hmx/hc.width-0.5)*0.25;
+      n.y+=n.vy+(hmy/hc.height-0.5)*0.25;
+      if(n.x<0)n.x=hc.width;if(n.x>hc.width)n.x=0;
+      if(n.y<0)n.y=hc.height;if(n.y>hc.height)n.y=0;
+      n.pulse+=0.018;
+      const a=(0.25+Math.sin(n.pulse)*0.25)*(isDark?1:0.7);
+      const ng=hctx.createRadialGradient(n.x,n.y,0,n.x,n.y,10);
+      ng.addColorStop(0,`hsla(${n.hue},80%,65%,${a*0.4})`);
+      ng.addColorStop(1,'transparent');
+      hctx.beginPath();hctx.arc(n.x,n.y,10,0,Math.PI*2);hctx.fillStyle=ng;hctx.fill();
+      hctx.beginPath();hctx.arc(n.x,n.y,n.size,0,Math.PI*2);
+      hctx.fillStyle=`hsla(${n.hue},80%,65%,${a})`;hctx.fill();
+    });
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<130){
+          hctx.beginPath();hctx.moveTo(nodes[i].x,nodes[i].y);hctx.lineTo(nodes[j].x,nodes[j].y);
+          hctx.strokeStyle=`rgba(107,72,255,${(1-d/130)*0.08*(isDark?1:0.6)})`;
+          hctx.lineWidth=0.5;hctx.stroke();
+        }
+      }
+    }
+    ht++;requestAnimationFrame(animH);
+  }
+  animH();
+
+  // 3D ORB
+  const oc=document.getElementById('orb3d');
+  const octx=oc.getContext('2d');
+  const OW=360,OH=360,OCX=180,OCY=180;
+  let omx=0,omy=0;
+  oc.addEventListener('mousemove',e=>{const r=oc.getBoundingClientRect();omx=e.clientX-r.left-OCX;omy=e.clientY-r.top-OCY;});
+
+  const opts=[];
+  for(let i=0;i<320;i++){
+    const th=Math.acos(1-2*Math.random()),ph=Math.random()*Math.PI*2;
+    opts.push({x:Math.sin(th)*Math.cos(ph),y:Math.sin(th)*Math.sin(ph),z:Math.cos(th),hue:260+Math.random()*80,size:1+Math.random()*2.2});
+  }
+  function r3(x,y,z,rx,ry){
+    let y2=y*Math.cos(rx)-z*Math.sin(rx),z2=y*Math.sin(rx)+z*Math.cos(rx);
+    let x2=x*Math.cos(ry)+z2*Math.sin(ry),z3=-x*Math.sin(ry)+z2*Math.cos(ry);
+    return[x2,y2,z3];
+  }
+  const tnodes=[
+    {l:'Excel',a:0,r:0.88,hue:270},{l:'Power BI',a:1.3,r:0.88,hue:300},
+    {l:'SQL',a:2.6,r:0.88,hue:330},{l:'DAX',a:3.9,r:0.88,hue:250},
+    {l:'Finance',a:5.2,r:0.88,hue:0}
+  ];
+  let oRY=0,ot=0;
+  function animOrb(){
+    const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+    octx.clearRect(0,0,OW,OH);
+    oRY+=0.005+omx*0.00007;
+    const oRX=0.3+omy*0.0005;
+
+    // Core glow
+    const cg=octx.createRadialGradient(OCX,OCY,0,OCX,OCY,88);
+    cg.addColorStop(0,isDark?'rgba(107,72,255,0.14)':'rgba(107,72,255,0.1)');
+    cg.addColorStop(0.5,isDark?'rgba(255,107,107,0.07)':'rgba(255,107,107,0.05)');
+    cg.addColorStop(1,'transparent');
+    octx.beginPath();octx.arc(OCX,OCY,88,0,Math.PI*2);octx.fillStyle=cg;octx.fill();
+
+    // Particles
+    const sorted=[...opts].map(p=>{const[x,y,z]=r3(p.x,p.y,p.z,oRX,oRY);return{...p,rx:x,ry:y,rz:z};}).sort((a,b)=>a.rz-b.rz);
+    sorted.forEach(p=>{
+      const sc=1/(1-p.rz*0.35),px=OCX+p.rx*86*sc,py=OCY+p.ry*86*sc;
+      const al=0.18+((p.rz+1)/2)*0.72;
+      octx.beginPath();octx.arc(px,py,p.size*sc*0.65,0,Math.PI*2);
+      octx.fillStyle=`hsla(${p.hue},75%,${isDark?65:55}%,${al})`;octx.fill();
+    });
+
+    // Structure lines
+    octx.save();octx.translate(OCX,OCY);octx.rotate(ot*0.004);
+    for(let i=0;i<8;i++){
+      const a=(i/8)*Math.PI*2;
+      octx.beginPath();octx.moveTo(0,0);octx.lineTo(Math.cos(a)*50,Math.sin(a)*50);
+      octx.strokeStyle=isDark?'rgba(107,72,255,0.07)':'rgba(107,72,255,0.05)';
+      octx.lineWidth=0.5;octx.stroke();
+    }
+    octx.restore();
+
+    // Tech nodes orbiting
+    tnodes.forEach((n,i)=>{
+      const angle=n.a+ot*0.006;
+      const[x,y,z]=r3(Math.cos(angle)*n.r,0,Math.sin(angle)*n.r,oRX*0.3,0);
+      const sc=1/(1-z*0.18);
+      const nx=OCX+x*122*sc,ny=OCY+y*75*sc+Math.sin(ot*0.01+i)*5;
+      if(z<-0.3)return;
+      const pulse=0.7+Math.sin(ot*0.02+i)*0.3;
+      const tw=octx.measureText(n.l).width+18;
+      const gh=octx.createRadialGradient(nx,ny,0,nx,ny,22);
+      gh.addColorStop(0,`hsla(${n.hue},80%,65%,${0.18*pulse})`);gh.addColorStop(1,'transparent');
+      octx.beginPath();octx.arc(nx,ny,22,0,Math.PI*2);octx.fillStyle=gh;octx.fill();
+      octx.beginPath();
+      if(octx.roundRect)octx.roundRect(nx-tw/2,ny-11,tw,22,11);
+      else octx.rect(nx-tw/2,ny-11,tw,22);
+      octx.fillStyle=isDark?'rgba(13,11,26,0.92)':'rgba(250,251,255,0.92)';octx.fill();
+      octx.strokeStyle=`hsla(${n.hue},70%,65%,${0.45*pulse})`;octx.lineWidth=0.8;octx.stroke();
+      octx.fillStyle=`hsla(${n.hue},70%,${isDark?70:38}%,${0.9*pulse})`;
+      octx.font=`500 10px 'JetBrains Mono',monospace`;
+      octx.textAlign='center';octx.textBaseline='middle';octx.fillText(n.l,nx,ny);
+    });
+
+    // LRD monogram
+    const mg=octx.createLinearGradient(OCX-40,OCY,OCX+40,OCY);
+    mg.addColorStop(0,'rgba(107,72,255,0.45)');mg.addColorStop(0.5,'rgba(255,107,107,0.45)');mg.addColorStop(1,'rgba(0,201,177,0.45)');
+    octx.font=`700 38px 'Playfair Display',serif`;
+    octx.fillStyle=mg;octx.textAlign='center';octx.textBaseline='middle';
+    octx.fillText('LRD',OCX,OCY);
+    ot++;requestAnimationFrame(animOrb);
+  }
+  animOrb();
+
+  // SCROLL REVEAL
+  const rvEls=document.querySelectorAll('.rv,.rvl,.rvr');
+  const robs=new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('in'),i*70);});
+  },{threshold:0.1});
+  rvEls.forEach(el=>robs.observe(el));
+
+  // SKILL BARS
+  const bars=document.querySelectorAll('.sbar-fill');
+  const bobs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.style.width=e.target.dataset.w+'%';bobs.unobserve(e.target);}});
+  },{threshold:0.3});
+  bars.forEach(b=>bobs.observe(b));
+
+  // PROJECT 3D TILT
+  document.querySelectorAll('.pcard').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const glow=card.querySelector('.pcard-glow');
+      const x=(e.clientX-r.left)/r.width-0.5;
+      const y=(e.clientY-r.top)/r.height-0.5;
+      card.style.transform=`translateY(-6px) rotateX(${-y*8}deg) rotateY(${x*8}deg)`;
+      if(glow){glow.style.left=(e.clientX-r.left-100)+'px';glow.style.top=(e.clientY-r.top-100)+'px';}
+    });
+    card.addEventListener('mouseleave',()=>{card.style.transform='';});
+  });
+
+  // BENTO tilt
+  document.querySelectorAll('.bcard').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-0.5;
+      const y=(e.clientY-r.top)/r.height-0.5;
+      card.style.transform=`translateY(-4px) scale(1.01) rotateX(${-y*6}deg) rotateY(${x*6}deg)`;
+    });
+    card.addEventListener('mouseleave',()=>{card.style.transform='';});
+  });
+}
+
+// THEME TOGGLE
+function toggleTheme(){
+  const html=document.documentElement;
+  const isLight=html.getAttribute('data-theme')==='light';
+  html.setAttribute('data-theme',isLight?'dark':'light');
+}
+
+// FORM
+function sendForm(btn){
+  btn.innerHTML='✓ Sent! <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+  btn.style.opacity='0.8';
+  setTimeout(()=>{
+    btn.innerHTML='Send Message<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+    btn.style.opacity='';
+  },3000);
+}
+</script>
+</body>
+</html>
